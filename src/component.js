@@ -33,11 +33,13 @@ export default class TableInput extends React.Component {
   initializeTable = () => {
     const { onChange } = this.props;
     // Add a single row with a single empty cell (1 row, 1 column)
-    const newValue = { rows: [{ _type: 'tableRow', _key: uuid(), cells: [''] }] };
+    const newValue = {
+      rows: [{ _type: 'tableRow', _key: uuid(), cells: [''] }],
+    };
     return onChange(createPatchFrom(newValue));
   };
 
-  addRow = e => {
+  addRow = ({ mode }) => {
     const { value, onChange } = this.props;
     // If we have an empty table, create a new one
     if (!value) return this.initializeTable();
@@ -45,12 +47,23 @@ export default class TableInput extends React.Component {
     const newValue = { ...value };
     // Calculate the column count from the first row
     const columnCount = value.rows[0].cells.length;
-    // Add as many cells as we have columns
-    newValue.rows.push({
-      _type: 'tableRow',
-      _key: uuid(),
-      cells: Array(columnCount).fill(''),
-    });
+
+    if (mode === 'heading') {
+      newValue.rows.push({
+        _type: 'tableRow',
+        _key: uuid(),
+        cells: [''],
+        mode,
+      });
+    } else {
+      // Add as many cells as we have columns
+      newValue.rows.push({
+        _type: 'tableRow',
+        _key: uuid(),
+        cells: Array(columnCount).fill(''),
+        mode: 'row',
+      });
+    }
     return onChange(createPatchFrom(newValue));
   };
 
@@ -75,7 +88,9 @@ export default class TableInput extends React.Component {
     const newValue = { ...value };
     // Add a cell to each of the rows
     newValue.rows.forEach((row, i) => {
-      newValue.rows[i].cells.push('');
+      if (row.mode !== 'heading') {
+        newValue.rows[i].cells.push('');
+      }
     });
     return onChange(createPatchFrom(newValue));
   };
@@ -119,6 +134,14 @@ export default class TableInput extends React.Component {
       <ButtonCollection>
         <Button inverted onClick={this.addRow}>
           Add Row
+        </Button>
+        <Button
+          inverted
+          onClick={() => {
+            this.addRow({ mode: 'heading' });
+          }}
+        >
+          Add Heading
         </Button>
         <Button inverted onClick={this.addColumn}>
           Add Column

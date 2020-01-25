@@ -2,19 +2,26 @@
   border-collapse: collapse;
   width: 100%;
   margin-bottom: 1rem;
+  font-size: 12px;
 }
 
 .cell {
-  border: 1px solid rgb(230, 230, 230);
-  padding: 0
+  border: 1px solid #00a9df;
+  padding: 0;
+}
+
+.cell--heading .input {
+  background: #fffaee;
+  font-weight: 700;
 }
 
 .input {
   box-sizing: border-box;
   width: 100%;
   border: none;
-  padding: 0.5em;
+  padding: 1em;
   outline: none;
+  color: #565a5c;
 }
 
 .input:focus {
@@ -50,21 +57,20 @@ tr:hover > .rowDelete {
   padding-top: 0.5em;
 }
 
-.rowDelete>span,
-.colDelete>span {
+.rowDelete > span,
+.colDelete > span {
   cursor: pointer;
   margin: 0 auto;
   display: flex;
   width: 1em;
   height: 3px;
   line-height: 1em;
-  background: rgb(242, 242, 242);;
+  background: rgb(245, 217, 217);
   align-items: center;
   justify-content: center;
 }
 
-.rowDelete>span:hover,
-.colDelete>span:hover {
+.rowDelete > span:hover,
+.colDelete > span:hover {
   background: #ff0000;
 }
-

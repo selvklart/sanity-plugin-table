@@ -4,9 +4,14 @@ export default {
   type: 'object',
   fields: [
     {
-        name: 'cells',
-        type: 'array',
-        of: [{ type: 'string' }],
-    }
-  ]
+      name: 'cells',
+      type: 'array',
+      of: [{ type: 'string' }],
+    },
+    {
+      name: 'mode',
+      type: 'string',
+      list: ['heading', 'row'],
+    },
+  ],
 };
