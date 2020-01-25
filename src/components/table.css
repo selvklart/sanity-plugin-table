@@ -31,6 +31,13 @@
 
 .rowDelete {
   padding-left: 0.5em;
+  opacity: 0;
+  pointer-events: none;
+}
+
+tr:hover > .rowDelete {
+  opacity: 1;
+  pointer-events: initial;
 }
 
 .colDelete {
