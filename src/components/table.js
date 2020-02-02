@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './table.css';
 
-const Table = ({ rows, updateCell, removeColumn, removeRow }) => {
+const Table = ({
+  rows,
+  updateCell,
+  removeColumn,
+  removeRow,
+  highlightFirstRow,
+}) => {
   if (!rows || !rows.length) return null;
 
   // Button to remove column
@@ -17,7 +23,11 @@ const Table = ({ rows, updateCell, removeColumn, removeRow }) => {
   );
 
   return (
-    <table className={styles.table}>
+    <table
+      className={[styles.table, highlightFirstRow && styles.highlightFirstRow]
+        .filter(x => x)
+        .join(' ')}
+    >
       <tbody>
         {rows.map((row, rowIndex) => (
           <tr key={`row-${rowIndex}`}>
@@ -52,6 +62,7 @@ Table.propTypes = {
   updateCell: PropTypes.func,
   removeColumn: PropTypes.func,
   removeRow: PropTypes.func,
+  highlightFirstRow: PropTypes.bool,
 };
 
 export default Table;
@@ -61,3 +72,7 @@ const RowRemover = ({ onClick }) => (
     <span onClick={onClick} />
   </td>
 );
+
+RowRemover.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};

@@ -17,8 +17,10 @@ export default class TableInput extends React.Component {
       title: PropTypes.string,
       description: PropTypes.string,
       options: PropTypes.shape({
+        allowHeadings: PropTypes.bool,
         collapsible: PropTypes.bool,
         collapsed: PropTypes.bool,
+        highlightFirstRow: PropTypes.bool,
         initialRows: PropTypes.number,
         initialColumns: PropTypes.number,
         minRows: PropTypes.number,
@@ -179,6 +181,7 @@ export default class TableInput extends React.Component {
           updateCell={this.updateCell}
           removeColumn={this.removeColumn}
           removeRow={this.removeRow}
+          highlightFirstRow={options.highlightFirstRow}
         />
       ) : null;
 
@@ -191,14 +194,16 @@ export default class TableInput extends React.Component {
         >
           Add Row
         </Button>
-        <Button
-          inverted
-          onClick={() => {
-            this.addRow({ mode: 'heading' });
-          }}
-        >
-          Add Heading
-        </Button>
+        {options.allowHeadings && (
+          <Button
+            inverted
+            onClick={() => {
+              this.addRow({ mode: 'heading' });
+            }}
+          >
+            Add Heading
+          </Button>
+        )}
         <Button
           disabled={this.getColumnCount() >= options.maxColumns}
           inverted

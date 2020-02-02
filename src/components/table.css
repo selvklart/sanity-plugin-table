@@ -29,7 +29,7 @@
   background: rgb(242, 242, 242);
 }
 
-tr:first-child .input {
+.highlightFirstRow tr:first-child .input {
   color: #00a9df;
   background: #e3f5fd;
   font-weight: 700;
