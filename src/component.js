@@ -16,7 +16,16 @@ export default class TableInput extends React.Component {
     type: PropTypes.shape({
       title: PropTypes.string,
       description: PropTypes.string,
-      options: PropTypes.object,
+      options: PropTypes.shape({
+        collapsible: PropTypes.bool,
+        collapsed: PropTypes.bool,
+        initialRows: PropTypes.number,
+        initialColumns: PropTypes.number,
+        minRows: PropTypes.number,
+        minColumns: PropTypes.number,
+        maxRows: PropTypes.number,
+        maxColumns: PropTypes.number,
+      }),
     }).isRequired,
     value: PropTypes.object,
     onChange: PropTypes.func.isRequired,
@@ -31,44 +40,70 @@ export default class TableInput extends React.Component {
   };
 
   initializeTable = () => {
-    const { onChange } = this.props;
+    const {
+      onChange,
+      type: { options },
+    } = this.props;
+
+    const rowCount = options.initialRows || 1;
+    const colCount = options.initialColumns || 1;
+
     // Add a single row with a single empty cell (1 row, 1 column)
     const newValue = {
-      rows: [{ _type: 'tableRow', _key: uuid(), cells: [''] }],
+      rows: Array(rowCount)
+        .fill()
+        .map(() =>
+          this.buildRow({
+            cells: Array(colCount)
+              .fill()
+              .map(() => ''),
+          }),
+        ),
     };
+
     return onChange(createPatchFrom(newValue));
   };
 
+  buildRow = ({ mode, cells }) => ({
+    _type: 'tableRow',
+    _key: uuid(),
+    cells,
+    mode: mode || 'row',
+  });
+
   addRow = ({ mode }) => {
-    const { value, onChange } = this.props;
+    const {
+      value,
+      onChange,
+      type: { options },
+    } = this.props;
     // If we have an empty table, create a new one
     if (!value) return this.initializeTable();
+    if (value.rows.length >= options.maxRows) return;
     // Clone the current table data
     const newValue = { ...value };
     // Calculate the column count from the first row
     const columnCount = value.rows[0].cells.length;
 
-    if (mode === 'heading') {
-      newValue.rows.push({
-        _type: 'tableRow',
-        _key: uuid(),
-        cells: [''],
-        mode,
-      });
-    } else {
-      // Add as many cells as we have columns
-      newValue.rows.push({
-        _type: 'tableRow',
-        _key: uuid(),
-        cells: Array(columnCount).fill(''),
-        mode: 'row',
-      });
-    }
+    newValue.rows.push(
+      this.buildRow({
+        mode: mode || 'row',
+        cells: mode === 'heading' ? [''] : Array(columnCount).fill(''),
+      }),
+    );
+
     return onChange(createPatchFrom(newValue));
   };
 
   removeRow = index => {
-    const { value, onChange } = this.props;
+    const {
+      value,
+      onChange,
+      type: { options },
+    } = this.props;
+
+    if (value.rows.length <= options.minRows) return;
+
     // Clone the current table data
     const newValue = { ...value };
     // Remove the row via index
@@ -81,9 +116,15 @@ export default class TableInput extends React.Component {
   };
 
   addColumn = e => {
-    const { value, onChange } = this.props;
+    const {
+      value,
+      onChange,
+      type: { options },
+    } = this.props;
     // If we have an empty table, create a new one
     if (!value) return this.initializeTable();
+    if (this.getColumnCount() >= options.maxColumns) return;
+
     // Clone the current table data
     const newValue = { ...value };
     // Add a cell to each of the rows
@@ -96,7 +137,13 @@ export default class TableInput extends React.Component {
   };
 
   removeColumn = index => {
-    const { value, onChange } = this.props;
+    const {
+      value,
+      onChange,
+      type: { options },
+    } = this.props;
+    if (this.getColumnCount() <= options.minColumns) return;
+
     // Clone the current table data
     const newValue = { ...value };
     // For each of the rows, remove the cell by index
@@ -116,6 +163,11 @@ export default class TableInput extends React.Component {
     return onChange(PatchEvent.from(unset()));
   };
 
+  getColumnCount = () => {
+    const { value } = this.props;
+    return value?.rows?.find(row => row.mode === 'row')?.cells.length || 0;
+  };
+
   render() {
     const { type, value } = this.props;
     const { title, description, options } = type;
@@ -132,7 +184,11 @@ export default class TableInput extends React.Component {
 
     const buttons = value ? (
       <ButtonCollection>
-        <Button inverted onClick={this.addRow}>
+        <Button
+          disabled={value?.rows?.length >= options.maxRows}
+          inverted
+          onClick={this.addRow}
+        >
           Add Row
         </Button>
         <Button
@@ -143,7 +199,11 @@ export default class TableInput extends React.Component {
         >
           Add Heading
         </Button>
-        <Button inverted onClick={this.addColumn}>
+        <Button
+          disabled={this.getColumnCount() >= options.maxColumns}
+          inverted
+          onClick={this.addColumn}
+        >
           Add Column
         </Button>
         <Button inverted color="danger" onClick={this.clear}>
