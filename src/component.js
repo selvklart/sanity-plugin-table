@@ -1,13 +1,13 @@
-import uuid from '@sanity/uuid';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { uuid } from '@sanity/uuid';
 import Table from './components/table';
 import PatchEvent, { set, unset } from 'part:@sanity/form-builder/patch-event';
 import FieldSet from 'part:@sanity/components/fieldsets/default';
 import ButtonCollection from 'part:@sanity/components/buttons/button-collection';
 import Button from 'part:@sanity/components/buttons/default';
 
-const createPatchFrom = value => {
+const createPatchFrom = (value) => {
   return PatchEvent.from(set(value));
 };
 
@@ -97,7 +97,7 @@ export default class TableInput extends React.Component {
     return onChange(createPatchFrom(newValue));
   };
 
-  removeRow = index => {
+  removeRow = (index) => {
     const {
       value,
       onChange,
@@ -117,7 +117,7 @@ export default class TableInput extends React.Component {
     return onChange(createPatchFrom(newValue));
   };
 
-  addColumn = e => {
+  addColumn = (e) => {
     const {
       value,
       onChange,
@@ -138,7 +138,7 @@ export default class TableInput extends React.Component {
     return onChange(createPatchFrom(newValue));
   };
 
-  removeColumn = index => {
+  removeColumn = (index) => {
     const {
       value,
       onChange,
@@ -149,7 +149,7 @@ export default class TableInput extends React.Component {
     // Clone the current table data
     const newValue = { ...value };
     // For each of the rows, remove the cell by index
-    newValue.rows.forEach(row => {
+    newValue.rows.forEach((row) => {
       row.cells.splice(index, 1);
     });
     // If the last cell was removed, clear the table
@@ -167,7 +167,7 @@ export default class TableInput extends React.Component {
 
   getColumnCount = () => {
     const { value } = this.props;
-    return value?.rows?.find(row => row.mode === 'row')?.cells.length || 0;
+    return value?.rows?.find((row) => row.mode === 'row')?.cells.length || 0;
   };
 
   render() {
