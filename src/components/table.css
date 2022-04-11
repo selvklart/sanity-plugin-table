@@ -5,9 +5,26 @@
   font-size: 12px;
 }
 
+.table ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.table li + li {
+  margin-top: -1px;
+}
+
 .cell {
   border: 1px solid #00a9df;
   padding: 0;
+}
+
+.cell + .cell {
+  border-left: none;
+}
+
+.cell--heading {
+  grid-column: 2 / -2;
 }
 
 .cell--heading .input {
@@ -29,7 +46,7 @@
   background: rgb(242, 242, 242);
 }
 
-.highlightFirstRow tr:first-child .input {
+.highlightFirstRow li:first-child .input {
   color: #00a9df;
   background: #e3f5fd;
   font-weight: 700;
@@ -48,7 +65,7 @@
   pointer-events: none;
 }
 
-tr:hover > .rowDelete {
+.table li:hover > .rowDelete {
   opacity: 1;
   pointer-events: initial;
 }

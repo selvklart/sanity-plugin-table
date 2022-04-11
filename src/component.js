@@ -182,6 +182,7 @@ export default class TableInput extends React.Component {
           updateCell={this.updateCell}
           removeColumn={this.removeColumn}
           removeRow={this.removeRow}
+          replaceState={this.replaceState}
           highlightFirstRow={options.highlightFirstRow}
         />
       ) : null
