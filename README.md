@@ -1,5 +1,7 @@
 # sanity-plugin-table
 
+This is a fork of https://github.com/coreyward/sanity-plugin-table, made into a package for easier use.
+
 [Sanity](https://www.sanity.io/) plugin that implements a `table` schema type and input component.
 
 ![example](https://user-images.githubusercontent.com/8467307/48703530-e369be00-ebeb-11e8-8299-14812461aee8.gif)
